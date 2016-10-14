@@ -38,7 +38,7 @@ namespace f3
 
 
 
-
+		// rayhit-test a GameObject, handling collider enable/disable
 		public static bool FindGORayIntersection (Ray ray, GameObject go, out GameObjectRayHit hit)
 		{
 			hit = null;
@@ -58,7 +58,7 @@ namespace f3
 		}
 
 
-
+		// basic ray-sphere intersection
 		public static bool IntersectRaySphere(Vector3 vOrigin, Vector3 vDirection, Vector3 vCenter, float fRadius, out float fRayT) 
 		{
 			fRayT = 0.0f;
@@ -87,24 +87,13 @@ namespace f3
 
 
 
-		// try to estimate relative scaling factor in world space that will maintain constant size relative to pixel space
-		//  (harder in VR because pixel space is curved...)
-		public static float EstimateWorldEyeScaling(Vector3 vWorldPos, Vector3 vWorldDeltaDir, float fDeltaDist, Vector3 vEyePos, float fEyeRadius) 
+		// Returns a distance value that corresponds to a fixed visual angle at the given distance
+		public static float GetVRRadiusForVisualAngle(Vector3 vWorldPos, Vector3 vEyePos, float fAngleInDegrees)
 		{
-			float fHitT0, fHitT1;
-			Vector3 vDir0 = (vEyePos - vWorldPos).normalized;
-			bool bHit0 = IntersectRaySphere (vWorldPos, vDir0, vEyePos, fEyeRadius, out fHitT0);
-			Vector3 vHit0 = vWorldPos + fHitT0 * vDir0;
-
-			Vector3 vDeltaPos = vWorldPos + fDeltaDist * vWorldDeltaDir;
-			Vector3 vDir1 = (vEyePos - vDeltaPos).normalized;
-			bool bHit1 = IntersectRaySphere (vDeltaPos, vDir1, vEyePos, fEyeRadius, out fHitT1);
-			Vector3 vHit1 = vDeltaPos + fHitT1 * vDir1;
-
-			Debug.Assert (bHit0 && bHit1);
-
-			float dp = (vHit1 - vHit0).magnitude / fEyeRadius;
-			return dp;
+			float r = (vWorldPos - vEyePos).magnitude;
+			double a = fAngleInDegrees * (Math.PI/180.0);
+			float c = 2.0f * r * (float)Math.Sin (a / 2.0);
+			return c;
 		}
 
 

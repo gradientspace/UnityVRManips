@@ -12,6 +12,9 @@ namespace f3 {
 		GameObject cursor;
 		Material cursorDefaultMaterial;
 		Material cursorHitMaterial;
+		Material capturingMaterial;
+
+		float fCursorVisualAngleInDegrees;
 
 		Vector3 vCursorPlaneOrigin;
 		Vector3 vCursorPlaneRight;
@@ -31,9 +34,11 @@ namespace f3 {
 			vPlaneCursorPos = Vector3.zero;
 			vSceneCursorPos = vPlaneCursorPos;
 
-			//cursorDefaultMaterial = MaterialUtil.CreateTransparentMaterial (Color.grey, 0.2f);
-			cursorDefaultMaterial = MaterialUtil.CreateStandardMaterial(Color.grey);
+			cursorDefaultMaterial = MaterialUtil.CreateTransparentMaterial (Color.grey, 0.2f);
 			cursorHitMaterial = MaterialUtil.CreateTransparentMaterial (Color.yellow, 0.8f);
+			capturingMaterial = MaterialUtil.CreateTransparentMaterial (Color.cyan, 0.3f);
+
+			fCursorVisualAngleInDegrees = 1.5f;
 
 			cursor = GameObject.CreatePrimitive (PrimitiveType.Sphere);
 			cursor.name = "cursor";
@@ -89,15 +94,17 @@ namespace f3 {
 			WorkPlaneController.Singleton.CurrentCursorRaySourceWorld = this.vRaySourcePosition;
 
 			cursor.transform.position = vSceneCursorPos;
-			cursor.GetComponent<MeshRenderer> ().material = 
-				(bHit) ? cursorHitMaterial : cursorDefaultMaterial;
-			cursor.layer = (bHit) ? LayerMask.NameToLayer (SceneGraphConfig.WidgetOverlayLayerName) : 0 ;
+			if (Scene.InCapture)
+				cursor.GetComponent<MeshRenderer> ().material = capturingMaterial;
+			else if (bHit)
+				cursor.GetComponent<MeshRenderer> ().material = cursorHitMaterial;
+			else
+				cursor.GetComponent<MeshRenderer> ().material = cursorDefaultMaterial;
+			cursor.layer = (bHit || Scene.InCapture) ? LayerMask.NameToLayer (SceneGraphConfig.WidgetOverlayLayerName) : 0 ;
 
-			// correct for change in size of 3D cursor sphere
-			//  (note that this is kind of hacky...)
-			float fScaling = MathUtil.EstimateWorldEyeScaling (vSceneCursorPos, mycam.transform.right, 0.1f, mycam.transform.position, 1.0f);
-			//cursor.transform.localScale = (1.0f/fScaling) * 0.0002f * Vector3.one;
-			cursor.transform.localScale = Vector3.one;
+			// maintain a consistent visual size for 3D cursor sphere
+			float fScaling = MathUtil.GetVRRadiusForVisualAngle(vSceneCursorPos, mycam.transform.position, fCursorVisualAngleInDegrees);
+			cursor.transform.localScale = new Vector3 (fScaling, fScaling, fScaling);
 		}
 	}
 
