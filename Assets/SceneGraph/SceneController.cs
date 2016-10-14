@@ -5,14 +5,16 @@ namespace f3 {
 
 	public class SceneController : MonoBehaviour {
 
-		Scene scene;
-		Cockpit cockpit;
+		Scene scene;							// set of objects in our universe
+		Cockpit cockpit;						// HUD that kind of sticks to view
+		MouseCursorController mouseCursor;		// handles mouse cursor interaction in VR
 
 		bool bInCameraControl;
 
 		SceneUIElement pCapturing;
 
 
+		// [RMS] why do it this way? can't we just create in Start?
 		public Scene GetScene() {
 			if (scene == null)
 				scene = new Scene ();
@@ -23,12 +25,18 @@ namespace f3 {
 				cockpit = new Cockpit();
 			return cockpit;
 		}
+		public MouseCursorController GetMouseCursor() {
+			if (mouseCursor == null) 
+				mouseCursor = new MouseCursorController (Camera.main, this);
+			return mouseCursor;
+		}
 
 
 		// Use this for initialization
 		void Start () {
 			GetScene ();
 			GetCockpit ().Start ();
+			GetMouseCursor ().Start ();
 
 			pCapturing = null;
 			bInCameraControl = false;
@@ -41,9 +49,10 @@ namespace f3 {
 		}
 
 		// Update is called once per frame
-		void Update () {
+		public void Update () {
 
 			GetCockpit ().Update ();
+			GetMouseCursor ().Update ();
 
 			if (Input.GetKeyDown ("escape")) {
 				Cursor.lockState = CursorLockMode.None;
@@ -208,8 +217,8 @@ namespace f3 {
 		}
 
 		Ray GetWorldRayAtWorkplaneCursor() {
-			Vector3 camPos = WorkPlaneController.Singleton.CurrentCursorRaySourceWorld;
-			Vector3 cursorPos = WorkPlaneController.Singleton.CurrentCursorPosWorld;
+			Vector3 camPos = GetMouseCursor().CurrentCursorRaySourceWorld;
+			Vector3 cursorPos = GetMouseCursor().CurrentCursorPosWorld;
 			Ray ray = new Ray (camPos, (cursorPos - camPos).normalized);
 			return ray;
 		}
