@@ -55,8 +55,8 @@ namespace f3
 			float fDeltaT = (fNewT - fTranslateStartT);
 
 			// construct new frame translated along axis (in local space)
-			Frame3 newFrame = translateFrameW;
-			newFrame.Origin += fDeltaT * translateFrameW.GetAxis(nTranslationAxis);
+			Frame3 newFrame = translateFrameL;
+			newFrame.Origin += fDeltaT * translateFrameL.GetAxis(nTranslationAxis);
 
 			// update target
 			target.SetLocalFrame (newFrame, CoordSpace.ObjectCoords);
