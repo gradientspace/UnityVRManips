@@ -98,6 +98,7 @@ namespace f3
 		GameObject gizmo;
 		GameObject x, y, z;
 		GameObject rotate_x, rotate_y, rotate_z;
+		GameObject translate_xy, translate_xz, translate_yz;
 
 		Scene parentScene;
 		TransformableSceneObject target;
@@ -165,6 +166,22 @@ namespace f3
 				(Mesh)Resources.Load ("meshes/axisrotate_z", typeof(Mesh)),
 				zMaterial, gizmo);			
 			Widgets [rotate_z] = new AxisRotationWidget (2, parentScene);
+
+
+			// plane translation widgets
+			translate_xy = AppendMeshGO ("xy_translate",
+				(Mesh)Resources.Load ("meshes/plane_translate_xy", typeof(Mesh)),
+				zMaterial, gizmo);
+			Widgets [translate_xy] = new PlaneTranslationWidget (2, parentScene);
+			translate_xz = AppendMeshGO ("xz_translate",
+				(Mesh)Resources.Load ("meshes/plane_translate_xz", typeof(Mesh)),
+				yMaterial, gizmo);
+			Widgets [translate_xz] = new PlaneTranslationWidget (1, parentScene);
+			translate_yz = AppendMeshGO ("yz_translate",
+				(Mesh)Resources.Load ("meshes/plane_translate_yz", typeof(Mesh)),
+				xMaterial, gizmo);
+			Widgets [translate_yz] = new PlaneTranslationWidget (0, parentScene);
+
 
 			// disable shadows on widget components
 			foreach ( var go in GameObjects ) 
