@@ -19,6 +19,7 @@ namespace f3 {
 		public Vector3 CurrentCursorRaySourceWorld;
 
 		GameObject xformObject;			// [RMS] this is an internal GO we use basically just for a transform
+										//  Actually a plane that stays in front of eye.
 
 		Vector3 vCursorPlaneOrigin;
 		Vector3 vCursorPlaneRight;
@@ -63,7 +64,7 @@ namespace f3 {
 			ren2.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 			ren2.receiveShadows = false;
 			ren2.material = MaterialUtil.CreateTransparentMaterial (Color.cyan, 0.2f);
-
+			ren2.enabled = false;
 		}
 		
 		// FixedUpdate is called before any Update
@@ -74,10 +75,12 @@ namespace f3 {
 				Vector3 camPos = camera.gameObject.transform.position;
 				Vector3 forward = camera.gameObject.transform.forward;
 
+				// orient Y-up plane so that it is in front of eye, perp to camera direction
 				xformObject.transform.position = camPos + 10 * forward;	
 				xformObject.transform.LookAt (camera.gameObject.transform);
 				xformObject.transform.RotateAround (xformObject.transform.position, xformObject.transform.right, 90);
 
+				// that plane is the plane the mouse cursor moves on
 				this.vCursorPlaneOrigin = xformObject.transform.position;
 				this.vCursorPlaneRight = xformObject.transform.right;
 				this.vCursorPlaneForward = xformObject.transform.forward;
