@@ -27,6 +27,12 @@ namespace f3
 		}
 
 
+		public static Material CreateFlatMaterial(Color c, float alpha = 1.0f ) {
+			Material m = new Material (Shader.Find ("Unlit/Texture"));
+			m.color = MakeColor (c, c.a * alpha);
+			return m;
+		}
+
 		public static Material CreateImageMaterial(string sResourcePath) {
 			Material m = new Material (Shader.Find ("Unlit/Texture"));
 			m.color = Color.white;

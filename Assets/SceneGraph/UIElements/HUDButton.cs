@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace f3
 {
+	// NB: on creation, this button is oriented so that positive Z points away from the *back* of
+	//  this button (ie the button "faces" -Z). Important if you want to align button towards something!
 	public class HUDButton : HUDStandardItem
 	{
 		GameObject button, buttonDisc;
@@ -17,7 +19,7 @@ namespace f3
 		public float Radius { get; set; }
 
 		static int button_counter = 1;
-		public void Create( Material defaultMaterial) {
+		public void Create( Material defaultMaterial ) {
 
 			button = new GameObject( string.Format("HUDButton{0}", button_counter++) );
 			buttonDisc = AppendMeshGO ("disc", 
@@ -26,7 +28,19 @@ namespace f3
 
 			buttonDisc.transform.Rotate (Vector3.right, -90.0f); // ??
 		}
+		public void Create( PrimitiveType eType, Material bgMaterial, Material primMaterial  ) {
 
+			button = new GameObject( string.Format("HUDButton{0}", button_counter++) );
+			buttonDisc = AppendMeshGO ("disc", 
+				MeshGenerators.CreateTrivialDisc (Radius, 32), bgMaterial, button);
+			buttonDisc.transform.Rotate (Vector3.right, -90.0f); // ??
+
+			GameObject prim = AppendUnityPrimitiveGO ("primitive", eType, primMaterial, button);
+			float primSize = Radius * 0.7f;
+			prim.transform.localScale = new Vector3 (primSize, primSize, primSize);
+			prim.transform.Translate (0.0f, 0.0f, - primSize);
+			prim.transform.Rotate (-15.0f, 45.0f, 0.0f, Space.Self);
+		}
 
 
 		// event handler for clicked event

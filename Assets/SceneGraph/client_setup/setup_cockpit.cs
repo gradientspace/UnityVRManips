@@ -14,6 +14,7 @@ namespace f3
 		}
 
 	
+		// returns frame at ray-intersection point, with normal pointing *outwards*
 		Frame3 make_hud_sphere_frame(float fHUDRadius, float fHorzAngleDeg, float fVertAngleDeg) {
 			Ray r = MathUtil.MakeRayFromSphereCenter (fHorzAngleDeg, fVertAngleDeg);
 			float fRayT = 0.0f;
@@ -30,11 +31,15 @@ namespace f3
 			Frame3 cockpitF = cockpit.GetLocalFrame (CoordSpace.WorldCoords);
 
 			float fHUDRadius = 0.7f;
+			Color bgColor = new Color (0.7f, 0.7f, 1.0f);
+
+			Material bgMaterial = MaterialUtil.CreateTransparentMaterial(bgColor, 0.7f);
+			Material primMaterial = MaterialUtil.CreateStandardMaterial (Color.yellow);
 
 			HUDButton addCylinderButton = new HUDButton () { Radius = 0.08f };
-			addCylinderButton.Create (MaterialUtil.CreateImageMaterial ("icons/cylinder_v1"));
+			addCylinderButton.Create (PrimitiveType.Cylinder, bgMaterial, primMaterial);
 			Frame3 cylFrame = addCylinderButton.GetObjectFrame();
-			Frame3 cylHUDFrame = make_hud_sphere_frame (fHUDRadius, -35.0f, 10.0f);
+			Frame3 cylHUDFrame = make_hud_sphere_frame (fHUDRadius, -45.0f, 0.0f);
 			addCylinderButton.SetObjectFrame ( 
 				cylFrame.Translated(cylHUDFrame.Origin)
 				.Rotated(Quaternion.FromToRotation (cylFrame.Z, cylHUDFrame.Z)) );
@@ -45,9 +50,9 @@ namespace f3
 
 
 			HUDButton addBoxButton = new HUDButton () { Radius = 0.08f };
-			addBoxButton.Create (MaterialUtil.CreateImageMaterial ("icons/cylinder_v1"));
+			addBoxButton.Create (PrimitiveType.Cube, bgMaterial, primMaterial);
 			Frame3 boxFrame = addBoxButton.GetObjectFrame();
-			Frame3 boxHUDFrame = make_hud_sphere_frame (fHUDRadius, -35.0f, -10.0f);
+			Frame3 boxHUDFrame = make_hud_sphere_frame (fHUDRadius, -45.0f, -15.0f);
 			addBoxButton.SetObjectFrame ( 
 				boxFrame.Translated(boxHUDFrame.Origin)
 				.Rotated(Quaternion.FromToRotation (boxFrame.Z, boxHUDFrame.Z)) );
