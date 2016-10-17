@@ -6,37 +6,56 @@ namespace f3
 {
 	public class Cockpit
 	{
-		Material defaultMaterial;
+		SceneController parent;
 		GameObject gameobject;
 
 		List<SceneUIElement> vUIElements;
 
-		public Cockpit()
+		public Cockpit(SceneController parent)
 		{
+			this.parent = parent;
 			vUIElements = new List<SceneUIElement> ();
-			gameobject = new GameObject("cockpit");
+		}
 
-			defaultMaterial = MaterialUtil.CreateStandardMaterial( new Color(0.25f, 0.75f, 0.1f) );
+		public SceneController Parent {
+			get { return parent; }
+		}
+		public GameObject RootGameObject {
+			get { return gameobject; }
 		}
 
 
-		public GameObject RootGameObject {
-			get { return gameobject; }
+		// cockpit frame is oriented such that
+		//    +X is right
+		//    +Y is up
+		//    +Z is into scene
+		// note that for most unity mesh objects are created on the XZ plane, and so you 
+		// need to rotate world_y to point to -cockpit_z, ie Quaternion.FromToRotation (Vector3.up, -cockpitF.Z)
+		public virtual Frame3 GetLocalFrame(CoordSpace eSpace) 
+		{
+			return MathUtil.GetGameObjectFrame (gameobject, eSpace);
+		}
+		public virtual void SetLocalFrame(Frame3 newFrame, CoordSpace eSpace)
+		{
+			MathUtil.SetGameObjectFrame (gameobject, newFrame, eSpace);
 		}
 
 
 		// these should be called by parent Unity functions
 		public void Start()
 		{
+			// create invisible plane for cockpit
+			gameobject = GameObject.CreatePrimitive (PrimitiveType.Plane);
+			gameobject.name = "cockpit";
+			MeshRenderer ren = gameobject.GetComponent<MeshRenderer> ();
+			ren.enabled = false;
+			gameobject.GetComponent<MeshCollider> ().enabled = false;
+
 			RootGameObject.transform.position = Camera.main.transform.position;
 			RootGameObject.transform.rotation = Camera.main.transform.rotation;
 
-
-			HUDButton button = new HUDButton () { Radius = 0.1f };
-			button.Create (defaultMaterial);
-			button.RootGameObject.transform.Rotate (Vector3.up, 10.0f, Space.World);
-			button.RootGameObject.transform.position += 0.6f * Vector3.forward - 0.5f * Vector3.right;
-			AddUIElement (button);
+			setup_cockpit setup = new setup_cockpit ();
+			setup.Initialize (this);
 		}
 		public void Update()
 		{
@@ -53,11 +72,11 @@ namespace f3
 
 
 
-		public void AddUIElement(SceneUIElement e) {
+		public void AddUIElement(SceneUIElement e, bool bIsInLocalFrame = true) {
 			vUIElements.Add (e);
 			if (e.RootGameObject != null) {
-				// assume gizmo transform is set to a local transform, so we want to apply current scene transform
-				e.RootGameObject.transform.SetParent (RootGameObject.transform, false);
+				// assume element transform is set to a local transform, so we want to apply current scene transform?
+				e.RootGameObject.transform.SetParent (RootGameObject.transform, (bIsInLocalFrame == false) );
 			}
 		}
 

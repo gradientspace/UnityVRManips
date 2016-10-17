@@ -110,12 +110,12 @@ namespace f3
 		Material xMaterial, yMaterial, zMaterial;
 
 
-		bool EnableDebugLogging;
+		//bool EnableDebugLogging;
 
 		public TransformGizmo ()
 		{
 			Widgets = new Dictionary<GameObject, Widget> ();
-			EnableDebugLogging = false;
+			//EnableDebugLogging = false;
 		}
 
 

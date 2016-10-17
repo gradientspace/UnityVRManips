@@ -15,6 +15,9 @@ namespace f3 {
 
 
 		// [RMS] why do it this way? can't we just create in Start?
+		public Scene Scene {
+			get { return GetScene (); }
+		}
 		public Scene GetScene() {
 			if (scene == null)
 				scene = new Scene ();
@@ -22,7 +25,7 @@ namespace f3 {
 		}
 		public Cockpit GetCockpit() {
 			if (cockpit == null)
-				cockpit = new Cockpit();
+				cockpit = new Cockpit(this);
 			return cockpit;
 		}
 		public MouseCursorController GetMouseCursor() {
@@ -186,9 +189,11 @@ namespace f3 {
 
 
 		void DoShortcutkeys() {
+			
 			if (Input.GetKeyUp (KeyCode.C)) {
 				scene.AddCylinder ();
 			}
+
 		}
 
 

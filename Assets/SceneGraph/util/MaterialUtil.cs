@@ -26,6 +26,16 @@ namespace f3
 			return m;
 		}
 
+
+		public static Material CreateImageMaterial(string sResourcePath) {
+			Material m = new Material (Shader.Find ("Unlit/Texture"));
+			m.color = Color.white;
+			Texture2D tex = (Texture2D)Resources.Load (sResourcePath);
+			m.mainTexture = tex;
+			return m;
+		}
+
+
 	}
 }
 

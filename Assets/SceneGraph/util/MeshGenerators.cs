@@ -5,7 +5,56 @@ namespace f3 {
 
 	public class MeshGenerators {
 
+
+		// create a triangle fan
+		public static Mesh CreateTrivialDisc(float radius, int nSteps) {
+
+			Vector3[] vertices = new Vector3[nSteps + 1];
+			Vector2[] uv = new Vector2[nSteps + 1];
+			Vector3[] normals = new Vector3[nSteps + 1];
+			int[] triangles = new int[nSteps * 3];
+
+			int vi = 0;
+			vertices [vi] = Vector3.zero;
+			uv [vi] = new Vector2 (0.5f, 0.5f);
+			normals [vi] = Vector3.up;
+			vi++;
+
+			float fDelta = (2 * Mathf.PI) / nSteps;
+			for (int k = 0; k < nSteps; ++k) {
+				float a = (float)k * fDelta;
+				float cosa = Mathf.Cos (a), sina = Mathf.Sin (a);
+				vertices [vi] = new Vector3 (radius * cosa, 0, radius * sina);
+				uv [vi] = new Vector2 (0.5f * (1.0f + cosa), 0.5f * (1 + sina));
+				normals [vi] = Vector3.up;
+				vi++;
+			}
+
+			int ti = 0;
+			for (int k = 1; k < nSteps; ++k) {
+				triangles [ti++] = k;
+				triangles [ti++] = 0;
+				triangles [ti++] = (k + 1);
+			}
+			triangles [ti++] = nSteps;
+			triangles [ti++] = 0;
+			triangles [ti++] = 1;
+
+			Mesh m = new Mesh ();
+			m.vertices = vertices;
+			m.uv = uv;
+			m.normals = normals;
+			m.triangles = triangles;
+
+			return m;
+		}
+
+
+
+
+
 		// from http://answers.unity3d.com/questions/855827/problems-with-creating-a-disk-shaped-mesh-c.html
+		// ugh this code is shit! 
 		public static Mesh CreateDisc(float radius, int radiusTiles,int tilesAround)
 		{
 			Vector3[] vertices = new Vector3    [radiusTiles*tilesAround*6];
@@ -23,14 +72,16 @@ namespace f3 {
 
 				for(int offset = 0; offset < radiusTiles; offset++)//loop from the center outwards
 				{
+					float cosA = Mathf.Cos (angle), sinA = Mathf.Sin (angle);
+					float cosB = Mathf.Cos (angle + radPerTile), sinB = Mathf.Sin (angle + radPerTile);
 
-					vertices[currentVertex]        =    new Vector3(Mathf.Cos(angle)*offset*tileLength                 ,0,  Mathf.Sin(angle)*offset*tileLength);
-					vertices[currentVertex + 1]    =    new Vector3(Mathf.Cos(angle + radPerTile)*offset*tileLength ,0,  Mathf.Sin(angle + radPerTile)*offset*tileLength);
-					vertices[currentVertex + 2]    =    new Vector3(Mathf.Cos(angle)*(offset + 1)*tileLength         ,0,  Mathf.Sin(angle)*(offset + 1)*tileLength);
+					vertices[currentVertex]        =    new Vector3(cosA*offset*tileLength        ,0,  sinA*offset*tileLength);
+					vertices[currentVertex + 1]    =    new Vector3(cosB*offset*tileLength        ,0,  sinB*offset*tileLength);
+					vertices[currentVertex + 2]    =    new Vector3(cosA*(offset + 1)*tileLength  ,0,  sinA*(offset + 1)*tileLength);
 
-					vertices[currentVertex + 3]    =    new Vector3(Mathf.Cos(angle + radPerTile)*offset*tileLength         ,0,  Mathf.Sin(angle + radPerTile)*offset*tileLength);
-					vertices[currentVertex + 4]    =    new Vector3(Mathf.Cos(angle + radPerTile)*(offset + 1)*tileLength     ,0,  Mathf.Sin(angle + radPerTile)*(offset + 1)*tileLength);
-					vertices[currentVertex + 5]    =    new Vector3(Mathf.Cos(angle)*(offset + 1)*tileLength                 ,0,  Mathf.Sin(angle)*(offset + 1)*tileLength);
+					vertices[currentVertex + 3]    =    new Vector3(cosB*offset*tileLength        ,0,  sinA*offset*tileLength);
+					vertices[currentVertex + 4]    =    new Vector3(cosB*(offset + 1)*tileLength  ,0,  sinA*(offset + 1)*tileLength);
+					vertices[currentVertex + 5]    =    new Vector3(cosA*(offset + 1)*tileLength  ,0,  sinB*(offset + 1)*tileLength);
 
 					currentVertex += 6;
 				}

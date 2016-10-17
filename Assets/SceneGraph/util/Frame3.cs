@@ -8,7 +8,13 @@ namespace f3
 		Quaternion rotation;
 		Vector3 origin;
 
-		static Frame3 Identity = new Frame3(Vector3.zero, Quaternion.identity);
+		static readonly public Frame3 Identity = new Frame3(Vector3.zero, Quaternion.identity);
+
+		public Frame3 (Frame3 copy)
+		{
+			this.rotation = copy.rotation;
+			this.origin = copy.origin;
+		}
 
 		public Frame3 (Vector3 origin)
 		{
@@ -46,7 +52,6 @@ namespace f3
 			set { rotation = value; }
 		}
 
-
 		public Vector3 Origin {
 			get { return origin; }
 			set { origin = value; }
@@ -62,8 +67,6 @@ namespace f3
 			get { return rotation * Vector3.forward; } 
 		}
 
-
-
 		public Vector3 GetAxis(int nAxis) {
 			if (nAxis == 0)
 				return rotation * Vector3.right;
@@ -75,6 +78,13 @@ namespace f3
 				throw new ArgumentOutOfRangeException ("nAxis");
 		}
 
+
+		public void Translate(Vector3 v) {
+			origin += v;
+		}
+		public void Rotate(Quaternion q) {
+			rotation *= q;
+		}
 
 
 		public Vector3 RayPlaneIntersection(Vector3 ray_origin, Vector3 ray_direction, int nAxisAsNormal) 

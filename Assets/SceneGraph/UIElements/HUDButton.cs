@@ -7,6 +7,7 @@ namespace f3
 	{
 		GameObject button, buttonDisc;
 
+
 		public HUDButton ()
 		{
 			Radius = 0.1f;
@@ -20,12 +21,27 @@ namespace f3
 
 			button = new GameObject( string.Format("HUDButton{0}", button_counter++) );
 			buttonDisc = AppendMeshGO ("disc", 
-				MeshGenerators.CreateDisc (Radius, 1, 32), 
+				MeshGenerators.CreateTrivialDisc (Radius, 32), 
 				defaultMaterial, button);
 
-			button.transform.Rotate (Vector3.right, -90.0f);
+			button.transform.Rotate (Vector3.right, -90.0f); // ??
 		}
 
+		public void SetIcon( string sPath ) {
+			Renderer ren = buttonDisc.GetComponent<Renderer> ();
+			Texture2D tex = (Texture2D)Resources.Load (sPath);
+			ren.material.mainTexture = tex;
+		}
+
+		// event handler for clicked event
+		//public delegate void HUDButtonClickedEventHandler(object sender, EventArgs e);
+		public event EventHandler OnClicked;
+
+		protected virtual void SendOnClicked(EventArgs e) {
+			var tmp = OnClicked;
+			if ( tmp != null )
+				tmp(this, e);
+		}
 
 
 
@@ -67,7 +83,7 @@ namespace f3
 		public bool EndCapture (UnityEngine.Ray ray)
 		{
 			if (IsGOHit (ray, buttonDisc)) {
-				Debug.Log ("Button Click Event!");
+				OnClicked(this, new EventArgs() );
 			}
 			return true;
 		}

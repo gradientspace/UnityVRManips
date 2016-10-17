@@ -83,25 +83,15 @@ namespace f3
 		//
 		public Frame3 GetLocalFrame(CoordSpace eSpace)
 		{
-			if (eSpace == CoordSpace.WorldCoords)
-				return new Frame3 (cylinder.transform, false);
-			else if (eSpace == CoordSpace.ObjectCoords)
-				return new Frame3 (cylinder.transform, true);
+			if (eSpace == CoordSpace.SceneCoords)
+				return parentScene.WorldToSceneF (new Frame3 (cylinder.transform, false));
 			else
-				return parentScene.WorldToSceneF (new Frame3 (cylinder.transform, false));				
+				return MathUtil.GetGameObjectFrame (cylinder, eSpace);
 		}
 		public void SetLocalFrame(Frame3 newFrame, CoordSpace eSpace)
 		{
-			if (eSpace == CoordSpace.WorldCoords) {
-				cylinder.transform.position = newFrame.Origin;
-				cylinder.transform.rotation = newFrame.Rotation;
-			} else if (eSpace == CoordSpace.ObjectCoords) {
-				cylinder.transform.localPosition = newFrame.Origin;
-				cylinder.transform.localRotation = newFrame.Rotation;
-			} else {
-				Debug.Log ("[Cylinder.SetLocalFrame] unsupported!\n");
-				throw new ArgumentException ("not supported!");
-			}
+			// note: SceneCoords not supported!
+			MathUtil.SetGameObjectFrame (cylinder, newFrame, eSpace);
 		}
 
 	}

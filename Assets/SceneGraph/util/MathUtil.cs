@@ -10,6 +10,32 @@ namespace f3
 		}
 
 
+		public static Frame3 GetGameObjectFrame(GameObject go, CoordSpace eSpace)
+		{
+			if (eSpace == CoordSpace.WorldCoords)
+				return new Frame3 (go.transform, false);
+			else if (eSpace == CoordSpace.ObjectCoords)
+				return new Frame3 (go.transform, true);
+			else
+				throw new ArgumentException ("not possible without refernce to scene!");
+		}
+		public static void SetGameObjectFrame(GameObject go, Frame3 newFrame, CoordSpace eSpace)
+		{
+			if (eSpace == CoordSpace.WorldCoords) {
+				go.transform.position = newFrame.Origin;
+				go.transform.rotation = newFrame.Rotation;
+			} else if (eSpace == CoordSpace.ObjectCoords) {
+				go.transform.localPosition = newFrame.Origin;
+				go.transform.localRotation = newFrame.Rotation;
+			} else {
+				// [RMS] cannot do this w/o handle to scene...
+				Debug.Log ("[MathUtil.SetGameObjectFrame] unsupported!\n");
+				throw new ArgumentException ("not possible without refernce to scene!");
+			}
+		}
+
+
+
 		public static Vector3 ClosestPointOnLine(Vector3 p0, Vector3 dir, Vector3 pt) 
 		{
 			float t = Vector3.Dot (pt - p0, dir);
