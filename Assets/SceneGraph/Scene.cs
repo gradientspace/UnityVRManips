@@ -44,7 +44,6 @@ namespace f3
 
 
 
-
 		public event SceneSelectionChangedHandler SelectionChangedEvent;
 		protected virtual void OnSelectionChanged(EventArgs e) {
 			if (SelectionChangedEvent != null)
@@ -62,6 +61,9 @@ namespace f3
 
 
 
+		public List<SceneObject> SceneObjects { 
+			get { return vObjects; }
+		}
 
 		public Cylinder AddCylinder() {
 			Cylinder c = new Cylinder();
@@ -126,6 +128,9 @@ namespace f3
 
 
 
+		public List<SceneUIElement> UIElements { 
+			get { return vUIElements; }
+		}
 
 		public void AddUIElement(SceneUIElement e) {
 			vUIElements.Add (e);

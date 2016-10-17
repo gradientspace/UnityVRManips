@@ -27,7 +27,6 @@ namespace f3
 
 		public void Initialize(Cockpit cockpit) 
 		{
-			var defaultMaterial = MaterialUtil.CreateStandardMaterial( new Color(0.25f, 0.75f, 0.1f) );
 			Frame3 cockpitF = cockpit.GetLocalFrame (CoordSpace.WorldCoords);
 
 			float fHUDRadius = 0.7f;

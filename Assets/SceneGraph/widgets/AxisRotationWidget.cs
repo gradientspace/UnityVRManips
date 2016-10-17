@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace f3
 {
+	//
+	// this Widget implements rotation around an axis
+	//
 	public class AxisRotationWidget : Widget
 	{
 		int nRotationAxis;

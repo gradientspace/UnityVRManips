@@ -53,7 +53,7 @@ namespace f3
 		//   which may call GetLocalFrame before BeginTransformation has a change to initialize,
 		//   so we have to initialize curRotation explicitly. 
 
-		Frame3 objectFrame;
+		Frame3 objectFrame = Frame3.Identity;
 		Quaternion curRotation = Quaternion.identity;
 
 		public void BeginTransformation() {
@@ -108,6 +108,21 @@ namespace f3
 		Widget activeWidget;
 
 		Material xMaterial, yMaterial, zMaterial;
+
+
+		public enum FrameType {
+			LocalFrame,
+			WorldFrame
+		};
+		FrameType eCurrentFrameMode;
+		public FrameType CurrentFrameMode {
+			get { return eCurrentFrameMode; }
+			set {
+				eCurrentFrameMode = value;
+				SetActiveFrame (eCurrentFrameMode);
+			}
+		}
+
 
 
 		//bool EnableDebugLogging;
@@ -187,18 +202,29 @@ namespace f3
 			foreach ( var go in GameObjects ) 
 				go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-			targetWrapper = new PassThroughWrapper (target);
-			//targetWrapper = new SceneFrameWrapper(parentScene, target);
-
-			// update gizmo transform to match target frame
-			Frame3 widgetFrame = targetWrapper.GetLocalFrame(CoordSpace.ObjectCoords);
-			gizmo.transform.localPosition = widgetFrame.Origin;
-			gizmo.transform.localRotation = widgetFrame.Rotation;
+			eCurrentFrameMode = FrameType.LocalFrame;
+			SetActiveFrame (eCurrentFrameMode);
 
 			int nWidgetLayer = LayerMask.NameToLayer (SceneGraphConfig.WidgetOverlayLayerName);
 			foreach ( var go in GameObjects )
 				go.layer = nWidgetLayer;
 		}
+
+
+
+		void SetActiveFrame(FrameType eFrame) {
+			if (eFrame == FrameType.LocalFrame) {
+				targetWrapper = new PassThroughWrapper (target);
+			} else {
+				targetWrapper = new SceneFrameWrapper(parentScene, target);
+			}
+
+			// update gizmo transform to match target frame
+			Frame3 widgetFrame = targetWrapper.GetLocalFrame(CoordSpace.ObjectCoords);
+			gizmo.transform.localPosition = widgetFrame.Origin;
+			gizmo.transform.localRotation = widgetFrame.Rotation;				
+		}
+
 
 
 		void OnSceneSelectionChanged(object sender, EventArgs e)

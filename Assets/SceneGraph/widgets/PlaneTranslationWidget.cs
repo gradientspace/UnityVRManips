@@ -4,7 +4,7 @@ using UnityEngine;
 namespace f3
 {
 	//
-	//
+	// this Widget implements translation constrained to a plane
 	// 
 	public class PlaneTranslationWidget : Widget
 	{
@@ -18,12 +18,10 @@ namespace f3
 		}
 
 		// stored frames from target used during click-drag interaction
-		Frame3 translateFrameL;		// local-spaace frame
+		Frame3 translateFrameL;		// local-space frame
 		Frame3 translateFrameW;		// world-space frame
-		Vector3 translateNormalW;	// world translation plane normal (redundant...)
 
 		// computed values during interaction
-		Frame3 raycastFrame;		// plane perpendicular to translateNormalW (redundant!)
 		Vector3 vInitialHitPos;		// initial hit position in frame
 
 		public bool BeginCapture(ITransformable target, Ray worldRay, UIRayHit hit)
@@ -31,32 +29,31 @@ namespace f3
 			// save local and world frames
 			translateFrameL = target.GetLocalFrame (CoordSpace.ObjectCoords);
 			translateFrameW = target.GetLocalFrame (CoordSpace.WorldCoords);
-			translateNormalW = translateFrameW.GetAxis (nTranslationPlaneNormal);
 
-			// construct plane we will ray-intersect with in UpdateCapture()
-			raycastFrame = new Frame3( translateFrameW.Origin, translateNormalW );
-
-			// save initial hitpos in this frame
-			vInitialHitPos = raycastFrame.RayPlaneIntersection(worldRay.origin, worldRay.direction, 2);
+			// save initial hitpos in translation plane
+			vInitialHitPos = translateFrameW.RayPlaneIntersection(worldRay.origin, worldRay.direction, nTranslationPlaneNormal);
 
 			return true;
 		}
 
 		public bool UpdateCapture(ITransformable target, Ray worldRay)
 		{
-			// ray-hit with plane that contains translation axis
-			Vector3 planeHit = raycastFrame.RayPlaneIntersection(worldRay.origin, worldRay.direction, 2);
+			// ray-hit with world-space translation plane
+			Vector3 planeHit = translateFrameW.RayPlaneIntersection(worldRay.origin, worldRay.direction, nTranslationPlaneNormal);
+			int e0 = (nTranslationPlaneNormal + 1) % 3;
+			int e1 = (nTranslationPlaneNormal + 2) % 3;
 
-			// construct delta
+			// construct delta in world space and project into frame coordinates
 			Vector3 delta = (planeHit - vInitialHitPos);
+			float dx = Vector3.Dot (delta, translateFrameW.GetAxis (e0));
+			float dy = Vector3.Dot (delta, translateFrameW.GetAxis (e1));
 
-			// construct new frame translated along axis
-			//  [RMS] doing this in world-space here, but we will need to do in local space to do snapping...
-			Frame3 newFrame = translateFrameW;
-			newFrame.Origin += delta;
+			// construct new local frame translated along plane axes
+			Frame3 newFrame = translateFrameL;
+			newFrame.Origin += dx*translateFrameL.GetAxis(e0) + dy*translateFrameL.GetAxis(e1);
 
 			// update target
-			target.SetLocalFrame (newFrame, CoordSpace.WorldCoords);
+			target.SetLocalFrame (newFrame, CoordSpace.ObjectCoords);
 
 			return true;
 		}

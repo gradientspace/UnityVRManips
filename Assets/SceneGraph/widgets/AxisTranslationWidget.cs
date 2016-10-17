@@ -4,7 +4,7 @@ using UnityEngine;
 namespace f3
 {
 	//
-	//
+	// this Widget implements translation constrained to an axis
 	// 
 	public class AxisTranslationWidget : Widget
 	{

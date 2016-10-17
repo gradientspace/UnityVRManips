@@ -192,7 +192,19 @@ namespace f3 {
 			
 			if (Input.GetKeyUp (KeyCode.C)) {
 				scene.AddCylinder ();
+
+			} else if (Input.GetKeyUp (KeyCode.T)) {
+				foreach (var ui in scene.UIElements) {
+					TransformGizmo gizmo = ui as TransformGizmo;
+					if (gizmo != null) {
+						if (gizmo.CurrentFrameMode == TransformGizmo.FrameType.LocalFrame)
+							gizmo.CurrentFrameMode = TransformGizmo.FrameType.WorldFrame;
+						else
+							gizmo.CurrentFrameMode = TransformGizmo.FrameType.LocalFrame;
+					}
+				}
 			}
+				
 
 		}
 
