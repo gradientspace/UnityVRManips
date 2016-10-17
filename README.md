@@ -4,17 +4,16 @@
 
 The goal of this project is to (1) figure this out, and (2) provide an open reference implementation. 
 
-The implementation is done in Unity, so even though this is code, you can run it without knowing anything about programming/compilers/etc.
-Just install the free personal version from https://store.unity.com/download?ref=personal
+Developed with Oculus Rift. Mozilla License. Implemented in Unity ( *so even though this is code, you can run it without knowing anything about programming/compilers/etc. Just install the free personal version from https://store.unity.com/download?ref=personal* )
 
-I have a Rift, so this has all only been tested on a Rift.
+Questions? Contact Ryan Schmidt [@rms80](http://www.twitter.com/rms80) / [gradientspace](http://www.gradientspace.com)
 
 
 ## Usage
 
 **NB: Currently only mouse input is supported. Still waiting for Oculus Touch...**
 
-Open TestScene1, put on your headset, click Play (or ctrl+p). You will see a blue ground plane and some floating shapes to your left. 
+Open **TestScene1**, put on your headset, click Play (or ctrl+p). You will see a blue ground plane and some floating shapes to your left. 
 
 When you move the mouse you will see a moving blue dot. Move the dot onto the cylinder and left-click. A cylinder will appear in the scene. 
 
@@ -28,16 +27,17 @@ Click on the cylinder. A transform gizmo will appear. Mouse over the widget elem
 
 ## Manipulator Geometry
 
-Each element in the 3D manipulator/gizmo/thingy is a separate mesh file, so they can easily be changed. You will find these files in **/Assets/Resources/meshes**. I export these meshes from a .mix file which you can open in Autodesk Meshmixer. 
+Each element in the 3D manipulator/gizmo/thingy is a separate mesh file, so they can be modified at will. You will find the .obj files in **/Assets/Resources/meshes**. I export these meshes from a .mix file which you can open in Autodesk Meshmixer. 
 
-The colors in these meshes are ignored, the material setup is done in code, in TransformGizmo.cs. You can easily disable elements of the gizmo by commenting out the relevent lines in the TransformGizmo.Create() function.
+The colors in the meshes are ignored. The material setup is done in code, in TransformGizmo.cs. You can easily disable elements of the gizmo by commenting out the relevent lines in the TransformGizmo.Create() function.
 
 
 
 ## Scene Setup
 
-The included TestScene1 is configured so that you can just press play. However if you want to try to use the 3D manipulator in your own code, you need to set up the scene as I have. 
-
+The included TestScene1 is configured so that you can just press Play. 
+However if you want to try to use the gizmo in your own code, you need to configure your scene as follows:
+( *note: this list may be incomplete - if it doesn't work, get in touch* )
 
 - A top-level GameObject named **X** for the Scene hierarchy (**X**=*SceneObjectManager* in test scene). 
     - Assign the **SceneController** script to this object
