@@ -22,6 +22,8 @@ namespace f3
 
 	public interface SceneObject
 	{
+		GameObject RootGameObject { get; }
+
 		void SetScene(Scene s);
 		Scene GetScene();
 

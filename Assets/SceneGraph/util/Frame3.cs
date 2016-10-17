@@ -82,8 +82,14 @@ namespace f3
 		public void Translate(Vector3 v) {
 			origin += v;
 		}
+		public Frame3 Translated(Vector3 v) {
+			return new Frame3 (this.origin + v, this.rotation);
+		}
 		public void Rotate(Quaternion q) {
 			rotation *= q;
+		}
+		public Frame3 Rotated(Quaternion q) {
+			return new Frame3 (this.origin, this.rotation * q);
 		}
 
 

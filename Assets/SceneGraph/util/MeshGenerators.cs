@@ -72,16 +72,13 @@ namespace f3 {
 
 				for(int offset = 0; offset < radiusTiles; offset++)//loop from the center outwards
 				{
-					float cosA = Mathf.Cos (angle), sinA = Mathf.Sin (angle);
-					float cosB = Mathf.Cos (angle + radPerTile), sinB = Mathf.Sin (angle + radPerTile);
+					vertices[currentVertex]        =    new Vector3(Mathf.Cos(angle)*offset*tileLength                 ,0,  Mathf.Sin(angle)*offset*tileLength);
+					vertices[currentVertex + 1]    =    new Vector3(Mathf.Cos(angle + radPerTile)*offset*tileLength ,0,  Mathf.Sin(angle + radPerTile)*offset*tileLength);
+					vertices[currentVertex + 2]    =    new Vector3(Mathf.Cos(angle)*(offset + 1)*tileLength         ,0,  Mathf.Sin(angle)*(offset + 1)*tileLength);					
 
-					vertices[currentVertex]        =    new Vector3(cosA*offset*tileLength        ,0,  sinA*offset*tileLength);
-					vertices[currentVertex + 1]    =    new Vector3(cosB*offset*tileLength        ,0,  sinB*offset*tileLength);
-					vertices[currentVertex + 2]    =    new Vector3(cosA*(offset + 1)*tileLength  ,0,  sinA*(offset + 1)*tileLength);
-
-					vertices[currentVertex + 3]    =    new Vector3(cosB*offset*tileLength        ,0,  sinA*offset*tileLength);
-					vertices[currentVertex + 4]    =    new Vector3(cosB*(offset + 1)*tileLength  ,0,  sinA*(offset + 1)*tileLength);
-					vertices[currentVertex + 5]    =    new Vector3(cosA*(offset + 1)*tileLength  ,0,  sinB*(offset + 1)*tileLength);
+					vertices[currentVertex + 3]    =    new Vector3(Mathf.Cos(angle + radPerTile)*offset*tileLength         ,0,  Mathf.Sin(angle + radPerTile)*offset*tileLength);
+					vertices[currentVertex + 4]    =    new Vector3(Mathf.Cos(angle + radPerTile)*(offset + 1)*tileLength     ,0,  Mathf.Sin(angle + radPerTile)*(offset + 1)*tileLength);
+					vertices[currentVertex + 5]    =    new Vector3(Mathf.Cos(angle)*(offset + 1)*tileLength                 ,0,  Mathf.Sin(angle)*(offset + 1)*tileLength);
 
 					currentVertex += 6;
 				}

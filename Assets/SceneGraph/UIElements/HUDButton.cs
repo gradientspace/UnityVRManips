@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace f3
 {
-	public class HUDButton : GameObjectSet, SceneUIElement
+	public class HUDButton : HUDStandardItem
 	{
 		GameObject button, buttonDisc;
 
@@ -27,11 +27,7 @@ namespace f3
 			button.transform.Rotate (Vector3.right, -90.0f); // ??
 		}
 
-		public void SetIcon( string sPath ) {
-			Renderer ren = buttonDisc.GetComponent<Renderer> ();
-			Texture2D tex = (Texture2D)Resources.Load (sPath);
-			ren.material.mainTexture = tex;
-		}
+
 
 		// event handler for clicked event
 		//public delegate void HUDButtonClickedEventHandler(object sender, EventArgs e);
@@ -45,42 +41,25 @@ namespace f3
 
 
 
+
+
 		#region SceneUIElement implementation
 
-		public UnityEngine.GameObject RootGameObject {
+		override public UnityEngine.GameObject RootGameObject {
 			get { return button; }
 		}
 
-
-		public void Disconnect ()
-		{
-			// nothing to do
-		}
-
-		public bool FindRayIntersection (UnityEngine.Ray ray, out UIRayHit hit)
-		{
-			hit = null;
-			GameObjectRayHit hitg = null;
-			if (FindGORayIntersection (ray, out hitg)) {
-				if (hitg.hitGO != null) {
-					hit = new UIRayHit (hitg, this);
-					return true;
-				}
-			}
-			return false;
-		}
-
-		public bool BeginCapture (UnityEngine.Ray ray, UIRayHit hit)
+		override public bool BeginCapture (UnityEngine.Ray ray, UIRayHit hit)
 		{
 			return HasGO (hit.hitGO);
 		}
 
-		public bool UpdateCapture (UnityEngine.Ray ray)
+		override public bool UpdateCapture (UnityEngine.Ray ray)
 		{
 			return true;
 		}
 
-		public bool EndCapture (UnityEngine.Ray ray)
+		override public bool EndCapture (UnityEngine.Ray ray)
 		{
 			if (IsGOHit (ray, buttonDisc)) {
 				OnClicked(this, new EventArgs() );

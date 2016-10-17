@@ -66,15 +66,21 @@ namespace f3
 		public Cylinder AddCylinder() {
 			Cylinder c = new Cylinder();
 			c.Create (defaultMaterial);
-			vObjects.Add (c);
-
-			c.SetScene (this);
-			c.RootGameObject.transform.SetParent (sceneo.transform, false);
-
+			AddSceneObject (c);
 			return c;
 		}
-
-
+		public Box AddBox() {
+			Box b = new Box();
+			b.Create (defaultMaterial);
+			AddSceneObject (b);
+			return b;
+		}
+		public void AddSceneObject(SceneObject o)
+		{
+			vObjects.Add (o);
+			o.SetScene(this);
+			o.RootGameObject.transform.SetParent (sceneo.transform, false);
+		}
 
 
 		public List<SceneObject> Selected {

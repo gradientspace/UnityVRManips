@@ -18,17 +18,24 @@ namespace f3
 			var defaultMaterial = MaterialUtil.CreateStandardMaterial( new Color(0.25f, 0.75f, 0.1f) );
 			Frame3 cockpitF = cockpit.GetLocalFrame (CoordSpace.WorldCoords);
 
-			HUDButton addCylinderButton = new HUDButton () { Radius = 0.1f };
+			HUDButton addCylinderButton = new HUDButton () { Radius = 0.08f };
 			addCylinderButton.Create (MaterialUtil.CreateImageMaterial ("icons/cylinder_v1"));
-
-			Frame3 cylButtonF = Frame3.Identity;
-			cylButtonF.Rotate (Quaternion.FromToRotation (Vector3.up, -Vector3.forward));
-			cylButtonF.Translate( 0.5f * Vector3.forward - 0.5f*Vector3.right);
-			MathUtil.SetGameObjectFrame (addCylinderButton.RootGameObject, cylButtonF, CoordSpace.ObjectCoords);
+			addCylinderButton.SetObjectFrame (
+				addCylinderButton.GetObjectFrame ().Translated (0.5f * Vector3.forward - 0.4f * Vector3.right + 0.1f * Vector3.up));
 			addCylinderButton.OnClicked += (s, e) => {
 				cockpit.Parent.Scene.AddCylinder ();
 			};
 			cockpit.AddUIElement (addCylinderButton, true);
+
+
+			HUDButton addBoxButton = new HUDButton () { Radius = 0.08f };
+			addBoxButton.Create (MaterialUtil.CreateImageMaterial ("icons/cylinder_v1"));
+			addBoxButton.SetObjectFrame (
+				addBoxButton.GetObjectFrame ().Translated (0.5f * Vector3.forward - 0.4f * Vector3.right - 0.1f * Vector3.up));
+			addBoxButton.OnClicked += (s, e) => {
+				cockpit.Parent.Scene.AddBox ();
+			};
+			cockpit.AddUIElement (addBoxButton, true);
 
 		}
 

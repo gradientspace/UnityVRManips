@@ -38,6 +38,20 @@ namespace f3
 		}
 
 
+		public virtual GameObject AppendUnityPrimitiveGO(string name, PrimitiveType eType, Material setMaterial, GameObject parent) {
+			var gameObj = GameObject.CreatePrimitive (eType);
+			gameObj.AddComponent (typeof(MeshCollider));
+			gameObj.GetComponent<MeshCollider> ().enabled = false;
+			gameObj.GetComponent<MeshRenderer> ().material = setMaterial;
+
+			vObjects.Add (gameObj);
+
+			gameObj.transform.parent = parent.transform;
+
+			return gameObj;
+		}
+
+
 		public virtual void SetGOMaterials(Material m) {
 			foreach (var go in vObjects) 
 				go.GetComponent<MeshRenderer> ().material = m;
