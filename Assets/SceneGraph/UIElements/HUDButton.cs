@@ -24,7 +24,7 @@ namespace f3
 				MeshGenerators.CreateTrivialDisc (Radius, 32), 
 				defaultMaterial, button);
 
-			button.transform.Rotate (Vector3.right, -90.0f); // ??
+			buttonDisc.transform.Rotate (Vector3.right, -90.0f); // ??
 		}
 
 

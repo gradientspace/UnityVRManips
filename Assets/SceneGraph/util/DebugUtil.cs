@@ -36,7 +36,7 @@ namespace f3
 			line.AddComponent<LineRenderer> ();
 			LineRenderer lr = line.GetComponent<LineRenderer> ();
 			//lr.material = new Material (Shader.Find ("Particles/Additive"));
-			lr.material = new Material(Shader.Find("Standard"));
+			lr.material = new Material(Shader.Find("Unlit/Texture"));
 			lr.SetColors (color, color);
 			lr.SetWidth (diameter, diameter);
 			lr.SetPosition (0, start);

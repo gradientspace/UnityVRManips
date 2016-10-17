@@ -105,8 +105,9 @@ namespace f3
 			fRayT = -b - Mathf.Sqrt(discr); 
 
 			// If t is negative, ray started inside sphere so clamp t to zero 
-			if (fRayT < 0.0f) 
-				fRayT = 0.0f; 
+			// [RMS] disabling this...want to know this info
+			//if (fRayT < 0.0f) 
+			//	fRayT = 0.0f; 
 
 			return true;
 		}
@@ -120,6 +121,21 @@ namespace f3
 			double a = fAngleInDegrees * (Math.PI/180.0);
 			float c = 2.0f * r * (float)Math.Sin (a / 2.0);
 			return c;
+		}
+
+
+
+		// horz angle is [-180,180] where negative is to the left
+		// vert angle is [-90,90] where negative is down
+		public static Ray MakeRayFromSphereCenter(float fAngleHorzDeg, float fAngleVertDeg) 
+		{
+			float fTheta = (Mathf.Deg2Rad * fAngleHorzDeg);
+			float fPhi = (Mathf.PI/2.0f) - (Mathf.Deg2Rad * fAngleVertDeg);
+			float z = Mathf.Cos (fTheta) * Mathf.Sin (fPhi);
+			float x = Mathf.Sin (fTheta) * Mathf.Sin (fPhi);
+			float y = Mathf.Cos (fPhi);
+			Vector3 d = new Vector3 (x, y, z);
+			return new Ray (Vector3.zero, d.normalized);
 		}
 
 
