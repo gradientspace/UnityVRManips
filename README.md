@@ -4,7 +4,7 @@
 
 The goal of this project is to (1) figure this out, and (2) provide an open reference implementation. 
 
-Developed with Oculus Rift. Mozilla License. Implemented in Unity ( *so even though this is code, you can run it without knowing anything about programming/compilers/etc. Just install the free personal version from https://store.unity.com/download?ref=personal* )
+Developed with Oculus Rift. Apache 2.0 License. Implemented in Unity ( *so even though this is code, you can run it without knowing anything about programming/compilers/etc. Just install the free personal version from https://store.unity.com/download?ref=personal* )
 
 Questions? Contact Ryan Schmidt [@rms80](http://www.twitter.com/rms80) / [gradientspace](http://www.gradientspace.com)
 
